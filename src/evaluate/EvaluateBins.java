@@ -19,11 +19,12 @@ public class EvaluateBins {
 		for (Bin bin : bins) {
 			System.out.println("Bin#" + bin.index + " has "
 					+ bin.getItems().size());
-			System.out.println("with freeSpace: " + bin.getFreeSpace());
-			System.out.println("freeTotal: " + freeTotal());
-			System.out.println("Fill: " + fillRatio());
-			System.out.println("Entropie: "+entropie());
+			System.out.println("with freeSpace: " + bin.getFreeSpace()+" Ratio: "
+					+((bin.getHeight()*bin.getWidth())-bin.getFreeSpace())/(double)(bin.getHeight()*bin.getWidth()));
 		}
+		System.out.println("freeTotal: " + freeTotal());
+		System.out.println("Fill: " + fillRatio());
+		System.out.println("Entropie: "+entropie());
 	}
 
 	/**
@@ -46,7 +47,7 @@ public class EvaluateBins {
 	public double fillRatio() {
 		double size = 0;
 		for (Bin bin : bins)
-			size += bin.space2D;
+			size += bin.getHeight()*bin.getWidth();
 		return (size - freeTotal()) / size;
 	}
 

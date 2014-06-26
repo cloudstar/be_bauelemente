@@ -1,25 +1,9 @@
 package draw;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-import javax.swing.Scrollable;
-
 import datamodel.Bin;
-import datamodel.Item;
-import datamodel.Space;
 
 public class DrawBins extends JComponent {
 	/**
