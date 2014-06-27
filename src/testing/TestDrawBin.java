@@ -75,7 +75,7 @@ public class TestDrawBin {
 
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setBounds(3, 3, 1100, 1500);
+		window.setBounds(20, 20, 800, 600);
 		JScrollPane scroll = new JScrollPane(new DrawBins(bins, 30, 30),
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);

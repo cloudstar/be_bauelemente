@@ -229,15 +229,19 @@ public class Guillotine {
 
 		// calculate the overhang for the new space
 		Space.Overhang overhang = null;
-		if (sp.overHang != null && sp.overHang.getDepth() > i.getWidth()
-				|| i.getAdditionRot() != null) {
-			int lastAdditionDepth = Math.max(
-					sp.overHang.getDepth() - i.getWidth(),
-					i.getAdditionRot().depth);
-			Box overhangBox = new Box(sp.overHang.getWidth(),
-					sp.overHang.getHeight(), lastAdditionDepth);
+		if(i.getAdditionRot() != null){
+                    System.out.println("Addition detected!!");
+                    Box overhangBox = new Box(i.getAdditionRot().width,
+					i.getAdditionRot().width, i.getAdditionRot().depth);
+                    overhang = sp.new Overhang(overhangBox,new Coord(i.getAdditionRot().posi.x,
+                            i.getHeightRot()-i.getAdditionRot().posi.y - i.getAdditionRot().height));
+                }else if(sp.overHang != null && sp.overHang.getDepth() > i.getWidth()){
+                    Box overhangBox = new Box(sp.overHang.getWidth(),
+					sp.overHang.getHeight(), sp.overHang.getDepth()-i.getWidth());
 			overhang = sp.new Overhang(overhangBox, sp.overHang.posi);
-		}
+                }
+           
+		
 
 		// new space after the item
 		Square sp1S = new Square(sp.getWidth() - i.getWidth(), i.getHeightRot());
@@ -264,7 +268,6 @@ public class Guillotine {
 		if (!containAll || !removeAll) {
 			System.out.println("Could not remove allSpace!!");
 			System.out.println(sp + " " + sp.posi + " " + sp.otoString());
-			while(!allSpace.remove(sp))System.out.println("Fuckyou");
 		}
 
 		allSpace.add(sp1);
