@@ -92,7 +92,7 @@ public class DrawBin extends JComponent {
 					p.y<=i.getPosi().y+i.getHeightRot()+yOffset){
 				st=i.toString();
 				if(i.getAdditionRot()!=null){
-					st=st+""+" with Addition in height: "+i.getMaxHeightAddi();
+					st=st+""+" with Addition in height: "+i.getHeightLimitByAddi();
 				}
 						break;
 			}

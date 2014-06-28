@@ -7,7 +7,7 @@ package datamodel;
  * 
  */
 public class Item {
-	public final Box space;
+	public final Box box;
 	public final int order;
 
 	int rot;
@@ -29,21 +29,21 @@ public class Item {
 	Addition addi;
 
 	public Item(Box space, int order) {
-		this.space = space;
+		this.box = space;
 		this.rot = 0;
 		this.order = order;
 		addi = null;
 	}
 
 	public Item(Box space, int order, Addition addi) {
-		this.space = space;
+		this.box = space;
 		this.rot = 0;
 		this.order = order;
 		this.addi = addi;
 	}
 
 	public Item(Item it) {
-		this.space = new Box(it.getWidth(),it.getHeightRot(),it.getDepthRot());
+		this.box = new Box(it.getWidth(),it.getHeightRot(),it.getDepthRot());
 		this.rot = 0;
 		this.order = it.order;
 		this.posi = it.getPosi();
@@ -60,21 +60,21 @@ public class Item {
 	}
 
 	public int getWidth() {
-		return space.width;
+		return box.width;
 	}
 
 	public int getHeightRot() {
 		if (rot % 2 == 0)
-			return space.height;
+			return box.height;
 		else
-			return space.depth;
+			return box.depth;
 	}
 
 	public int getDepthRot() {
 		if (rot % 2 == 0)
-			return space.depth;
+			return box.depth;
 		else
-			return space.height;
+			return box.height;
 	}
 
 	public int getSpace2D() {
@@ -107,16 +107,16 @@ public class Item {
 	}
 
 	/**
-	 * returns the maxHeight without additions
+	 * returns the maxHeight regarding the additions
 	 * 
 	 * @return
 	 */
-	public int getMaxHeightAddi() {
+	public int getHeightLimitByAddi() {
 		if (addi != null) {
 			if (rot % 4 == 0)
-				return space.depth - addi.posi.y - addi.height;
+				return box.depth - addi.posi.y - addi.height;
 			if (rot % 4 == 1)
-				return space.height - addi.posi.x - addi.width;
+				return box.height - addi.posi.x - addi.width;
 			if (rot % 4 == 2)
 				return addi.posi.y;
 
@@ -132,19 +132,19 @@ public class Item {
 			return addi;
 		if (rot % 4 == 1)
 			return new Addition(addi.height, addi.width, addi.depth, new Coord(
-					space.depth-addi.posi.y - addi.height, addi.posi.x));
+					box.depth-addi.posi.y - addi.height, addi.posi.x));
 		if (rot % 4 == 2)
 			return new Addition(addi.width, addi.height, addi.depth, new Coord(
-					space.height - addi.posi.x - addi.width, space.depth - addi.posi.y-addi.height));
+					box.height - addi.posi.x - addi.width, box.depth - addi.posi.y-addi.height));
 		
 			return new Addition(addi.height, addi.width, addi.depth, new Coord(
-					addi.posi.y, space.height - addi.posi.x - addi.width));
+					addi.posi.y, box.height - addi.posi.x - addi.width));
 		
 	}
 
 	public String toString() {
-		return "Item with width: " + space.width + " height: " + space.height + " depth: "
-				+ space.depth + " order: " + order;
+		return "Item with width: " + box.width + " height: " + box.height + " depth: "
+				+ box.depth + " order: " + order;
 	}
 
 	/**

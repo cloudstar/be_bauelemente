@@ -54,7 +54,7 @@ public class GenerateOrders {
 	}
 
 	/**
-	 * creates a items with additions over the whole item with an given offset
+	 * creates a items with additions with a given offset
 	 * 
 	 * @param items
 	 * @param same

@@ -1,5 +1,6 @@
 package datamodel;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -14,16 +15,20 @@ public class Bin {
 	public final int index;
 	LinkedList<Item> items;
 	SortedSpace spaces;
-	SortedSpace allSpace;
+
+	// bin values
+	public final static int Bwidth = 400;
+	public final static int Bheight = 200;
+	public final static int Bdepth = 400;
 
 	public Bin(Box space, int index, SortedSpace allSpace) {
 		this.space = space;
 		this.index = index;
-		this.allSpace = allSpace;
 
 		spaces = new SortedSpace();
 		// add new free space
-		Space init = new Space(space.getPlain(), null, new Coord(0, 0), this,null);
+		Space init = new Space(space.getPlain(), null, new Coord(0, 0), this,
+				null);
 		spaces.add(init);
 		allSpace.add(init);
 
@@ -36,7 +41,7 @@ public class Bin {
 	 * @return
 	 */
 	public int getFreeSpace() {
-		int sp = space.height*space.width;
+		int sp = space.height * space.width;
 		for (Item i : items) {
 			sp -= i.getSpace2D();
 		}
@@ -50,19 +55,50 @@ public class Bin {
 	public LinkedList<Item> getItems() {
 		return items;
 	}
-	
-	public int getWidth(){
+
+	public int getWidth() {
 		return space.width;
 	}
-	
-	public int getHeight(){
+
+	public int getHeight() {
 		return space.height;
 	}
-	
-	public int getDepth(){
+
+	public int getDepth() {
 		return space.depth;
 	}
-	
+
+	/**
+	 * Creates a new bin in the list uses default values if no initial bin is
+	 * set
+	 * 
+	 * @param bins
+	 * @param allSpace
+	 * @return
+	 */
+	public static void newBin(ArrayList<Bin> bins, SortedSpace allSpace) {
+		if (bins == null) {
+			System.out.println("Binlist is not initilized!");
+			return;
+		}
+		if (allSpace == null) {
+			System.out.println("sortedSpace is not initilized!");
+			return;
+		}
+		if (bins.isEmpty()) {
+			bins.add(new Bin(new Box(Bwidth, Bheight, Bdepth), 0, allSpace));
+		} else {
+			Bin bin = bins.get(0);
+			Box binB = new Box(bin.getWidth(), bin.getHeight(), bin.getDepth());
+			bins.add(new Bin(binB, bins.size(), allSpace));
+		}
+	}
+
+	public static ArrayList<Bin> createBins(SortedSpace allSpace) {
+		ArrayList<Bin> bins = new ArrayList<>();
+		newBin(bins, allSpace);
+		return bins;
+	}
 
 	public String toString() {
 		return "Bin#" + index + " SpaceFree#" + getFreeSpace();

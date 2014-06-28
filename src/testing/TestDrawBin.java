@@ -29,8 +29,7 @@ public class TestDrawBin {
 	final static int Bdepth = 400;
 
 	public static void main(String[] a) {
-		SortedSpace allSpace = new SortedSpace();
-		ArrayList<Bin> bins = new ArrayList<>();
+		ArrayList<Bin> bins =null;
 		// Bin bin1 = new Bin(400, 200, 400, 0, allSpace);
 		// bins.add(bin1);
 
@@ -63,7 +62,7 @@ public class TestDrawBin {
 		for (; set1.hasNext();) {
 			sort.add(set1.next());
 		}
-		Guillotine.fillBinsInOrderWithAdditions(bins, sort.iterator(), allSpace);
+		bins = Guillotine.fillBinsInOrderByHeight(sort.iterator());
 
 		// fillBinsInOrder(bins, set1, allSpace);
 		// fillBinsInOrder(bins, set2, allSpace);

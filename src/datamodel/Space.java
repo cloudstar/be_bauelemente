@@ -4,7 +4,7 @@ package datamodel;
  * 
  * represents a free space in the bin, in which we can put new items
  */
-public class Space {
+public class Space implements Comparable<Space> {
 	 public final Square plain;
 	/**
 	 * the item behind the free we lean on
@@ -14,7 +14,8 @@ public class Space {
 	public final Bin bin;
 	public final Space father;
 	public final Overhang overHang;
-
+	public boolean deleted=false;
+	
 	public Space(Square plain, Item lean, Coord posi, Bin bin,Space parent) {
 		this.plain = plain;
 		this.lean = lean;
@@ -89,5 +90,10 @@ public class Space {
 		public int getDepth(){
 			return box.depth;
 		}
+	}
+
+	@Override
+	public int compareTo(Space o) {
+		return this.getCompareByHeight()-o.getCompareByHeight();
 	}
 }
