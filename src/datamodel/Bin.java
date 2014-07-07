@@ -13,13 +13,14 @@ public class Bin {
 
 	Box space;
 	public final int index;
-	LinkedList<Item> items;
+	LinkedList<PlaceableItem> items;
 	SortedSpace spaces;
+	private boolean close;
 
 	// bin values
-	public final static int Bwidth = 400;
-	public final static int Bheight = 200;
-	public final static int Bdepth = 400;
+	public final static int Bwidth = 175;
+	public final static int Bheight = 256;
+	public final static int Bdepth = 272;
 
 	public Bin(Box space, int index, SortedSpace allSpace) {
 		this.space = space;
@@ -32,7 +33,7 @@ public class Bin {
 		spaces.add(init);
 		allSpace.add(init);
 
-		items = new LinkedList<Item>();
+		items = new LinkedList<PlaceableItem>();
 	}
 
 	/**
@@ -42,7 +43,7 @@ public class Bin {
 	 */
 	public int getFreeSpace() {
 		int sp = space.height * space.width;
-		for (Item i : items) {
+		for (PlaceableItem i : items) {
 			sp -= i.getSpace2D();
 		}
 		return sp;
@@ -52,7 +53,7 @@ public class Bin {
 		return spaces;
 	}
 
-	public LinkedList<Item> getItems() {
+	public LinkedList<PlaceableItem> getItems() {
 		return items;
 	}
 
@@ -94,6 +95,13 @@ public class Bin {
 		}
 	}
 
+	public static ArrayList<Bin> createBins(SortedSpace allSpace, Box box) {
+		ArrayList<Bin> bins = new ArrayList<>();
+		// newBin(bins, allSpace);
+		bins.add(new Bin(box, bins.size(), allSpace));
+		return bins;
+	}
+
 	public static ArrayList<Bin> createBins(SortedSpace allSpace) {
 		ArrayList<Bin> bins = new ArrayList<>();
 		newBin(bins, allSpace);
@@ -102,5 +110,18 @@ public class Bin {
 
 	public String toString() {
 		return "Bin#" + index + " SpaceFree#" + getFreeSpace();
+	}
+
+	/**
+	 * close this bin, so no more items can be put into
+	 * 
+	 * @param allSpace
+	 */
+	public void close(SortedSpace allSpace) {
+		this.close = true;
+		for (Space s : spaces.descendingSet()) {
+			s.deleted = true;
+			allSpace.remove(s);
+		}
 	}
 }

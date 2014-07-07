@@ -10,19 +10,19 @@ public class Item {
 	public final Box box;
 	public final int order;
 
-	int rot;
+	//int rot;
 	/**
 	 * the bin
 	 */
-	Bin bin;
+	//Bin bin;
 	/**
 	 * index of the binlist
 	 */
-	int index;
+	//int index;
 	/**
 	 * position in the bin
 	 */
-	Coord posi;
+	//Coord posi;
 	/**
 	 * possible addition of the Item
 	 */
@@ -30,76 +30,54 @@ public class Item {
 
 	public Item(Box space, int order) {
 		this.box = space;
-		this.rot = 0;
+		
 		this.order = order;
 		addi = null;
 	}
 
 	public Item(Box space, int order, Addition addi) {
 		this.box = space;
-		this.rot = 0;
+		
 		this.order = order;
 		this.addi = addi;
 	}
 
-	public Item(Item it) {
-		this.box = new Box(it.getWidth(),it.getHeightRot(),it.getDepthRot());
-		this.rot = 0;
+	public Item(Item it,int rot) {
+		this.box = new Box(it.getWidth(),it.getHeightRot(rot),it.getDepthRot(rot));		
 		this.order = it.order;
-		this.posi = it.getPosi();
 		this.addi = it.addi;
 	}
-
-	/**
-	 * sets the bin
-	 */
-	public void setBin(Bin bin, int index, Coord posi2) {
-		this.bin = bin;
-		this.index = index;
-		this.posi = posi2;
+	
+	public Item(Item it){
+		this.box = new Box(it.getWidth(),it.getHeightRot(0),it.getDepthRot(0));		
+		this.order = it.order;
+		this.addi = it.addi;
 	}
 
 	public int getWidth() {
 		return box.width;
 	}
 
-	public int getHeightRot() {
+	public int getHeight(){
+		return box.height;
+	}
+	
+	public int getHeightRot(int rot) {
 		if (rot % 2 == 0)
 			return box.height;
 		else
 			return box.depth;
 	}
 
-	public int getDepthRot() {
+	public int getDepthRot(int rot) {
 		if (rot % 2 == 0)
 			return box.depth;
 		else
 			return box.height;
 	}
 
-	public int getSpace2D() {
-		return getWidth() * getHeightRot();
-	}
-
-	/**
-	 * rotations clockwise
-	 * 
-	 * @return
-	 */
-	public int getRot() {
-		return rot;
-	}
-
-	public void setRot(int rot) {
-		this.rot = rot;
-	}
-
-	public Coord getPosi() {
-		return posi;
-	}
-
-	public void setPosi(Coord posi) {
-		this.posi = posi;
+	public int getSpace2D(int rot) {
+		return getWidth() * getHeightRot(rot);
 	}
 
 	public void setAddition(Addition addi) {
@@ -111,7 +89,7 @@ public class Item {
 	 * 
 	 * @return
 	 */
-	public int getHeightLimitByAddi() {
+	public int getHeightLimitByAddi(int rot) {
 		if (addi != null) {
 			if (rot % 4 == 0)
 				return box.depth - addi.posi.y - addi.height;
@@ -125,7 +103,7 @@ public class Item {
 		return Integer.MAX_VALUE;
 	}
 
-	public Addition getAdditionRot() {
+	public Addition getAdditionRot(int rot) {
 		if (addi == null)
 			return null;
 		if (rot % 4 == 0)

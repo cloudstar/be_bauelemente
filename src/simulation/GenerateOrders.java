@@ -29,7 +29,7 @@ public class GenerateOrders {
 					public int compare(Item o1, Item o2) {
 						if (o1.equals(o2))
 							return 0;
-						int cmp = o2.getHeightRot() - o1.getHeightRot();
+						int cmp = o2.getHeight() - o1.getHeight();
 						if (cmp == 0)
 							return 1;
 						return cmp;
@@ -74,7 +74,7 @@ public class GenerateOrders {
 					public int compare(Item o1, Item o2) {
 						if (o1.equals(o2))
 							return 0;
-						int cmp = o2.getHeightRot() - o1.getHeightRot();
+						int cmp = o2.getHeight() - o1.getHeight();
 						if (cmp == 0)
 							return 1;
 						return cmp;

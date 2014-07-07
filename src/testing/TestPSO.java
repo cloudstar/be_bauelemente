@@ -13,6 +13,7 @@ import pso.PSO;
 import simulation.GenerateOrders;
 import datamodel.Bin;
 import datamodel.Item;
+import datamodel.PlaceableItem;
 import datamodel.SortedItems;
 import datamodel.SortedSpace;
 import draw.DrawBins;
@@ -31,7 +32,7 @@ public class TestPSO {
 			// bins.add(bin1);
 
 			int items1 = 100;
-			int items2 = 50;
+			int items2 = 10;
 //			Iterator<Item> set1 = GenerateOrders.generateSortedItems(items1,false, 10, 200, 60, 1);
 //			Iterator<Item> set2 = GenerateOrders.generateSortedItems(items2,true, 10, 200, 120, 2);
 //			Iterator<Item> set3 = GenerateOrders.generateSortedItems(items2,false, 10, 100, 30, 3);
@@ -46,26 +47,26 @@ public class TestPSO {
 			SortedItems sort = new SortedItems(); 
 
 			for (; set2.hasNext();) {
-				sort.add(set2.next());
+				sort.add(new PlaceableItem(set2.next(), null, null));
 			}
 
 			for (; set3.hasNext();) {
-				sort.add(set3.next());
+				sort.add(new PlaceableItem(set3.next(), null, null));
 			}
 			for (; set4.hasNext();) {
-				sort.add(set4.next());
+				sort.add(new PlaceableItem(set4.next(), null, null));
 			}
-
-		//	for (; set1.hasNext();) {
-		//		sort.add(set1.next());
-		//	}
+//
+//			for (; set1.hasNext();) {
+//				sort.add(new PlaceableItem(set1.next(), null, null));
+//			}
 			
-			ArrayList<Item> list = new ArrayList<>();
-			Iterator<Item> arra = sort.iterator();
+			ArrayList<PlaceableItem> list = new ArrayList<>();
+			Iterator<PlaceableItem> arra = sort.iterator();
 			for(;arra.hasNext();){
 			list.add(arra.next());
 			}
-			bins = PSO.fillBinsInOrderByHeight(list.toArray(new Item[0]));
+			bins = PSO.fillBinsInOrderByHeight(list.toArray(new PlaceableItem[0]));
 
 			// fillBinsInOrder(bins, set1, allSpace);
 			// fillBinsInOrder(bins, set2, allSpace);
@@ -74,16 +75,16 @@ public class TestPSO {
 
 			EvaluateBins ebins = new EvaluateBins(bins);
 			ebins.eval();
-//
-//			JFrame window = new JFrame();
-//			window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//			window.setBounds(20, 20, 800, 600);
-//			JScrollPane scroll = new JScrollPane(new DrawBins(bins, 30, 30),
-//					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-//					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-//
-//			window.getContentPane().add(scroll);
-//
-//			window.setVisible(true);
+
+			JFrame window = new JFrame();
+			window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			window.setBounds(20, 20, 800, 600);
+			JScrollPane scroll = new JScrollPane(new DrawBins(bins, 30, 30),
+					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+			window.getContentPane().add(scroll);
+
+			window.setVisible(true);
 		}
 }

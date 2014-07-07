@@ -6,12 +6,12 @@ import datamodel.Bin;
 import datamodel.Box;
 import datamodel.Coord;
 import datamodel.Item;
+import datamodel.PlaceableItem;
 import datamodel.SortedSpace;
 import datamodel.Space;
 import datamodel.Square;
 
 public class Guillotine {
-
 
 	/**
 	 * Fills the bins in the provided order
@@ -19,13 +19,22 @@ public class Guillotine {
 	 * @param set
 	 */
 
-	public static ArrayList<Bin>  fillBinsInOrderByHeight(Iterator<Item> set) {
+	public static ArrayList<Bin> fillBinsInOrderByHeight(
+			Iterator<PlaceableItem> set, Box box,boolean close) {
 		SortedSpace allSpace = new SortedSpace();
-		ArrayList<Bin> bins = Bin.createBins(allSpace);
-		
+		ArrayList<Bin> bins = Bin.createBins(allSpace, box);
+
 		// as long as there are items in our list
+		int order=1;
 		for (; set.hasNext();) {
-			Item it = set.next();
+			PlaceableItem it = set.next();
+			//close after a order ist completly packed
+			if( close && order !=it.order()){
+				order = it.order();
+				for(Bin b : bins)
+					b.close(allSpace);
+			}
+		
 			if (it.getHeightRot() > bins.get(0).getHeight()) {
 				System.err.println("item too big for a bin!!");
 				continue;
@@ -33,8 +42,14 @@ public class Guillotine {
 			// searching for possible spaces
 			Space freeSpace = searchBySpace(bins, allSpace, it);
 			addItemGuilHori(it, freeSpace, allSpace);
-		}		
+		}
 		return bins;
+	}
+
+	public static ArrayList<Bin> fillBinsInOrderByHeight(
+			Iterator<PlaceableItem> set,boolean close) {
+		return fillBinsInOrderByHeight(set, new Box(Bin.Bwidth, Bin.Bheight,
+				Bin.Bdepth),close);
 	}
 
 	/**
@@ -43,14 +58,22 @@ public class Guillotine {
 	 * 
 	 * @param set
 	 */
-	public static ArrayList<Bin> fillBinsInOrderBySeating(Iterator<Item> set) {
-		
+	public static ArrayList<Bin> fillBinsInOrderBySeating(
+			Iterator<PlaceableItem> set, Box box,boolean close) {
+
 		SortedSpace allSpace = new SortedSpace();
-		ArrayList<Bin> bins = Bin.createBins(allSpace);
-		
+		ArrayList<Bin> bins = Bin.createBins(allSpace, box);
+
+		int order=1;
 		// as long as there are items in our list
 		for (; set.hasNext();) {
-			Item it = set.next();
+			PlaceableItem it = set.next();
+			//close after a order ist completly packed
+			if( close && order !=it.order()){
+				order = it.order();
+				for(Bin b : bins)
+					b.close(allSpace);
+			}
 			if (it.getHeightRot() > bins.get(0).getHeight()) {
 				System.err.println("item too big for a bin!!");
 				continue;
@@ -61,19 +84,34 @@ public class Guillotine {
 		}
 		return bins;
 	}
-/**
- * Fills bin in the provided order regarding the hangover
- * 
- * @param set
- * @return
- */
-	public static ArrayList<Bin> fillBinsInOrderWithAdditions(Iterator<Item> set) {
+
+	public static ArrayList<Bin> fillBinsInOrderBySeating(
+			Iterator<PlaceableItem> set,boolean close) {
+		return fillBinsInOrderBySeating(set, new Box(Bin.Bwidth, Bin.Bheight,
+				Bin.Bdepth),close);
+	}
+	
+	/**
+	 * Fills bin in the provided order regarding the hangover
+	 * 
+	 * @param set
+	 * @return
+	 */
+	public static ArrayList<Bin> fillBinsInOrderWithAdditions(
+			Iterator<PlaceableItem> set, Box box,boolean close) {
 		SortedSpace allSpace = new SortedSpace();
-		ArrayList<Bin> bins = Bin.createBins(allSpace);
+		ArrayList<Bin> bins = Bin.createBins(allSpace, box);
 		
+		int order = 1;
 		// as long as there are items in our list
 		for (; set.hasNext();) {
-			Item it = set.next();
+			PlaceableItem it = set.next();
+			//close after a order ist completly packed
+			if( close && order !=it.order()){
+				order = it.order();
+				for(Bin b : bins)
+					b.close(allSpace);
+			}
 			if (it.getHeightRot() > bins.get(0).getHeight()) {
 				System.err.println("item too big for a bin!!");
 				continue;
@@ -85,6 +123,11 @@ public class Guillotine {
 		return bins;
 	}
 
+	public static ArrayList<Bin> fillBinsInOrderWithAdditions(
+			Iterator<PlaceableItem> set,boolean close) {
+		return fillBinsInOrderWithAdditions(set, new Box(Bin.Bwidth, Bin.Bheight,
+				Bin.Bdepth),close);
+	}
 	/**
 	 * Searches for a space we can put the item into.
 	 * 
@@ -94,7 +137,7 @@ public class Guillotine {
 	 * @return
 	 */
 	public static Space searchBySpace(ArrayList<Bin> bins,
-			SortedSpace allSpace, Item it) {
+			SortedSpace allSpace, PlaceableItem it) {
 		Space space = null;
 		for (Space s : allSpace.tailSet(it)) {
 			if (s.getHeight() < it.getHeightRot()) {
@@ -128,7 +171,7 @@ public class Guillotine {
 	 * @return
 	 */
 	public static Space searchBySeating(ArrayList<Bin> bins,
-			SortedSpace allSpace, Item it) {
+			SortedSpace allSpace, PlaceableItem it) {
 		Space space = null;
 		for (Space s : allSpace.tailSet(it)) {
 			if (s.getHeight() < it.getHeightRot()) {
@@ -140,9 +183,9 @@ public class Guillotine {
 			// the conditions beside the height
 			if (s.getWidth() < it.getWidth()) {
 				continue;
-			}// if the seating is under 60% we wont place it
+			}// if the seating is under a threshhold we wont place it
 			if (s.lean != null && s.lean.getDepthRot() < 0.6 * it.getDepthRot()) {
-				System.out.println("Seating conditions!!");
+				//System.out.println("Seating conditions!!");
 				continue;
 			}
 			space = s;
@@ -166,7 +209,7 @@ public class Guillotine {
 	 * @return
 	 */
 	public static Space searchWithAddition(ArrayList<Bin> bins,
-			SortedSpace allSpace, Item it) {
+			SortedSpace allSpace, PlaceableItem it) {
 		Space space = null;
 		for (Space s : allSpace.tailSet(it)) {
 			if (s.getHeight() < it.getHeightRot()) {
@@ -177,13 +220,13 @@ public class Guillotine {
 				continue; // dead space
 			if (s.getWidth() < it.getWidth()) {
 				continue;
-			}// if the seating is under 60% we wont place it
+			}// if the seating is under threshold% we wont place it
 			if (s.lean != null && s.lean.getDepthRot() < 0.6 * it.getDepthRot()) {
 				// System.out.println("Seating condition!!");
 				continue;
 			}// if the space has a addition from the lean-item.
 			if (s.getOverhangLimit() < it.getDepthRot()) {
-				System.out.println("Addition condition!!");
+				//System.out.println("Addition condition!!");
 				continue;
 			}
 			space = s;
@@ -206,22 +249,21 @@ public class Guillotine {
 	 *            the space
 	 * @return
 	 */
-	public static boolean addItemGuilHori(Item i, Space sp, SortedSpace allSpace) {
-		//sanity checks
+	public static boolean addItemGuilHori(PlaceableItem i, Space sp,
+			SortedSpace allSpace) {
+		// sanity checks
 		if (i.getHeightRot() > sp.getHeight() || i.getWidth() > sp.getWidth()) {
 			System.out.println("Item does not fit into the Space!!");
 			return false;
 		}
-		if (!sp.bin.getSpaces().contains(sp)) {
-			System.out.println("Does not hold the space:" + sp);
-			// return false;
-		}
-		if (i.getDepthRot()>sp.getOverhangLimit()) {
-			System.out.println("Overhang conflict with Item: "+i);
-			System.out.println("Overhang limi: t"+sp.getOverhangLimit()+" exceded in: " + sp);
-			// return false;
-		}
 		
+		if (i.getDepthRot() > sp.getOverhangLimit()) {
+			System.out.println("Overhang conflict with Item: " + i);
+			System.out.println("Overhang limi: t" + sp.getOverhangLimit()
+					+ " exceded in: " + sp);
+			// return false;
+		}
+
 		// add item to the bin
 		i.setBin(sp.bin, sp.bin.index, sp.posi);
 		sp.bin.getItems().add(i);
@@ -234,7 +276,7 @@ public class Guillotine {
 					i.getAdditionRot().width, i.getAdditionRot().depth);
 			overhang = sp.new Overhang(overhangBox, new Coord(
 					i.getAdditionRot().posi.x, i.getHeightLimitByAddi()));
-			//overhang in the space
+			// overhang in the space
 		} else if (sp.overHang != null && sp.overHang.getDepth() > i.getWidth()) {
 			Box overhangBox = new Box(sp.overHang.getWidth(),
 					sp.overHang.getHeight(), sp.overHang.getDepth()
@@ -255,8 +297,9 @@ public class Guillotine {
 		boolean contain = sp.bin.getSpaces().contains(sp);
 		boolean remove = sp.bin.getSpaces().remove(sp);
 		if (!contain || !remove) {
-			System.out.println("Could not remove internSpace!!");
-			System.out.println(sp + " " + sp.posi + " " + sp.otoString());
+			// Debug
+			// System.out.println("Could not remove internSpace!!");
+			// System.out.println(sp + " " + sp.posi + " " + sp.otoString());
 			sp.deleted = true;
 		}
 
@@ -269,11 +312,11 @@ public class Guillotine {
 		}
 		boolean removeAll = allSpace.remove(sp);
 		if (!containAll || !removeAll) {
-			System.out.println("Could not remove allSpace!!");
-			System.out.println(sp + " " + sp.posi + " " + sp.otoString());
+			// Debug
+			// System.out.println("Could not remove allSpace!!");
+			// System.out.println(sp + " " + sp.posi + " " + sp.otoString());
 			sp.deleted = true;
-			if (allSpace.descendingSet().remove(sp))
-				System.out.println("Descending set removed it !!");
+
 		}
 
 		allSpace.add(sp1);

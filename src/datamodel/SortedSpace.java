@@ -53,7 +53,7 @@ public class SortedSpace  {
 	 * @param i
 	 * @return
 	 */
-	public SortedSet<Space> tailSet(Item i) {
+	public SortedSet<Space> tailSet(PlaceableItem i) {
 		return spaces.tailSet(new Space(new Square(i.getWidth(), i.getHeightRot()),null,null,null,null));
 	}
 //	public SortedSet<Space> headSet(Item i) {

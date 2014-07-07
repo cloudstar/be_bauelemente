@@ -9,14 +9,14 @@ public class Space implements Comparable<Space> {
 	/**
 	 * the item behind the free we lean on
 	 */
-	public final Item lean;
+	public final PlaceableItem lean;
 	public Coord posi;
 	public final Bin bin;
 	public final Space father;
 	public final Overhang overHang;
 	public boolean deleted=false;
 	
-	public Space(Square plain, Item lean, Coord posi, Bin bin,Space parent) {
+	public Space(Square plain, PlaceableItem lean, Coord posi, Bin bin,Space parent) {
 		this.plain = plain;
 		this.lean = lean;
 		this.posi = posi;
@@ -25,7 +25,7 @@ public class Space implements Comparable<Space> {
 		this.overHang = null;
 	}
 	
-	public Space(Square plain, Item lean, Coord posi, Bin bin,Space parent,Overhang overhang) {
+	public Space(Square plain, PlaceableItem lean, Coord posi, Bin bin,Space parent,Overhang overhang) {
 		this.plain = plain;
 		this.lean = lean;
 		this.posi = posi;
@@ -49,7 +49,7 @@ public class Space implements Comparable<Space> {
 	public int getOverhangLimit(){
 		if(overHang == null)
 			return Integer.MAX_VALUE;
-		System.out.println("Overhang returned: "+overHang.posi.y);
+		//System.out.println("Overhang returned: "+overHang.posi.y);
 		return overHang.posi.y;
 	}
 

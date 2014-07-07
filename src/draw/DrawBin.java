@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 
 import datamodel.Bin;
 import datamodel.Item;
+import datamodel.PlaceableItem;
 import datamodel.Space;
 
 /**
@@ -45,13 +46,13 @@ public class DrawBin extends JComponent {
 		g.setColor(Color.blue);
 		g.fillRect(xOffset, yOffset, bin.getWidth(), bin.getHeight());
 
-		paintLabel(g, "Bin# " + bin.index, xOffset, yOffset - 2);
+		paintLabel(g, "Gestell# " + bin.index, xOffset, yOffset - 2);
 		// items
-		for (Item i : bin.getItems()) {
+		for (PlaceableItem i : bin.getItems()) {
 			// System.out.println("Item painted at: " + i.getPosi());
-			g.setColor(new Color((float) 0.2 * i.order % 5,
-					1 - (float) (i.order % 5) / 5, (float) 0.1 * i.order % 10));
-			fillRectWithOffset(g, i.getPosi().x, i.getPosi().y, i.getWidth(),
+			g.setColor(new Color((float) 0.2 * i.order() % 5,
+					1 - (float) (i.order() % 5) / 5, (float) 0.1 * i.order() % 10));
+			fillRectWithOffset(g, i.posi.x, i.posi.y, i.getWidth(),
 					i.getHeightRot());
 		}
 		// draw all the free spaces
@@ -85,11 +86,11 @@ public class DrawBin extends JComponent {
 
 	String toolTip(Point p){
 		String st = null;
-		for(Item i:bin.getItems()){
-			if(		p.x>=i.getPosi().x+xOffset &&
-					p.x<=i.getPosi().x+i.getWidth()+xOffset &&
-					p.y>=i.getPosi().y+yOffset &&
-					p.y<=i.getPosi().y+i.getHeightRot()+yOffset){
+		for(PlaceableItem i:bin.getItems()){
+			if(		p.x>=i.posi.x+xOffset &&
+					p.x<=i.posi.x+i.getWidth()+xOffset &&
+					p.y>=i.posi.y+yOffset &&
+					p.y<=i.posi.y+i.getHeightRot()+yOffset){
 				st=i.toString();
 				if(i.getAdditionRot()!=null){
 					st=st+""+" with Addition in height: "+i.getHeightLimitByAddi();
